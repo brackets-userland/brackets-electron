@@ -321,7 +321,7 @@ module.exports = function (grunt) {
     });
 
     // task: install
-    grunt.registerTask('install', ['write-config', 'less']);
+    grunt.registerTask('install', ['electron-rebuild', 'write-config', 'less']);
 
     // task: test
     grunt.registerTask('test', ['jshint:all', 'jasmine']);
