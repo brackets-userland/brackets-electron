@@ -32,7 +32,7 @@
     "devDependencies": {
         "electron-packager": "https://github.com/zaggino/electron-packager.git",
         "electron-prebuilt": "0.27.2",
-        "electron-rebuild": "0.2.1",
+        "electron-rebuild": "0.2.2",
         "grunt": "0.4.5",
         "grunt-cleanempty": "1.0.3",
         "grunt-cli": "0.1.13",
@@ -48,11 +48,11 @@
         "grunt-contrib-watch": "0.6.1",
         "grunt-targethtml": "0.2.6",
         "grunt-usemin": "0.1.11",
-        "jshint": "2.7.0",
-        "load-grunt-tasks": "3.1.0",
+        "jshint": "2.8.0",
+        "load-grunt-tasks": "3.2.0",
         "q": "1.4.1",
-        "semver": "4.3.4",
-        "xmldoc": "0.3.0"
+        "semver": "4.3.6",
+        "xmldoc": "0.3.1"
     },
     "bin": {
         "brackets": "./app/index.js"
