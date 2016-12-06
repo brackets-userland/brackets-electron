@@ -188,6 +188,13 @@ define(function (require, exports, module) {
             }
         }
 
+
+        if (brackets.platform === "mac") {
+			browserWindow.setDocumentEdited(false);
+			browserWindow.setRepresentedFilename("");
+
+		}
+
         var projectRoot = ProjectManager.getProjectRoot();
         if (projectRoot) {
             var projectName = projectRoot.name;
@@ -196,8 +203,18 @@ define(function (require, exports, module) {
                 windowTitle = StringUtils.format(WINDOW_TITLE_STRING_DOC, _currentTitlePath, projectName, brackets.config.app_title);
                 // Display dirty dot when there are unsaved changes
                 if (currentDoc && currentDoc.isDirty) {
-                    windowTitle = "• " + windowTitle;
+                    if (brackets.platform === "mac") {
+						browserWindow.setDocumentEdited(true);
+					} else {
+						windowTitle = "• " + windowTitle;
+					}
                 }
+
+				// macOS have document icon for document window in window title
+				if (brackets.platform === "mac") {
+					browserWindow.setRepresentedFilename(currentDoc.file.fullPath);
+				}
+
             } else {
                 // A document is not open
                 windowTitle = StringUtils.format(WINDOW_TITLE_STRING_NO_DOC, projectName, brackets.config.app_title);
