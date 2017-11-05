@@ -147,7 +147,8 @@ export function openMainBracketsWindow(query: {} | string = {}): Electron.Browse
         height: shellConfig.getNumber("window.height"),
         webPreferences: {
             nodeIntegration: false,
-            preload: pathLib.resolve(__dirname, "preload.js")
+            preload: pathLib.resolve(__dirname, "preload.js"),
+            nativeWindowOpen: true
         }
     };
 

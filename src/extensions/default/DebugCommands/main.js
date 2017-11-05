@@ -96,18 +96,18 @@ define(function (require, exports, module) {
     }
 
     // Implements the 'Run Tests' menu to bring up the Jasmine unit test window
-    var BracketsWindow = window.electron.remote.require("./test-brackets-window");
-    var TEST_WINDOW_ID = "brackets-test";
+    var _testWindow = null;
     function _runUnitTests(spec) {
         var queryString = spec ? "?spec=" + spec : "";
-        var url = [window.location.href, "../test/SpecRunner.html" + queryString];
-        if (BracketsWindow.isOpen(TEST_WINDOW_ID)) {
-            BracketsWindow.loadURL(url, TEST_WINDOW_ID);
+        if (_testWindow && !_testWindow.closed) {
+            if (_testWindow.location.search !== queryString) {
+                _testWindow.location.href = "../test/SpecRunner.html" + queryString;
+            } else {
+                _testWindow.location.reload(true);
+            }
         } else {
-            BracketsWindow.open(url, TEST_WINDOW_ID, {
-                width: $(window).width(),
-                height: $(window).height()
-            });
+            _testWindow = window.open("../test/SpecRunner.html" + queryString, "brackets-test", "width=" + $(window).width() + ",height=" + $(window).height());
+            _testWindow.location.reload(true); // if it had been opened earlier, force a reload because it will be cached
         }
     }
 
