@@ -9,7 +9,7 @@ interface MenuTemplates {
 
 import * as _ from "lodash";
 import * as assert from "assert";
-import { app, Menu } from "electron";
+import { app, Menu, BrowserWindow } from "electron";
 import * as shell from "./shell";
 
 const menuTemplates: MenuTemplates = {};
@@ -24,12 +24,10 @@ function _getOrCreateMenuTemplate(winId: number) {
 }
 
 app.on("browser-window-focus", function (event, win) {
-    const menuTemplate = _getOrCreateMenuTemplate(win.id);
-    _refreshMenu(menuTemplate);
+    _refreshMenu(win);
 });
 app.on("browser-window-blur", function (event, win) {
-    const menuTemplate = _getOrCreateMenuTemplate(win.id);
-    _refreshMenu(menuTemplate);
+    _refreshMenu(win);
 });
 
 let currentShortcuts: { [accelerator: string]: string } = {};
@@ -43,8 +41,14 @@ function registerShortcuts(win: Electron.BrowserWindow, menuItem: MenuItemOption
     }
 }
 
-const __refreshMenu = _.debounce(function (menuTemplate: MenuItemOptions[]) {
-    Menu.setApplicationMenu(Menu.buildFromTemplate(_.cloneDeep(menuTemplate)));
+const __refreshMenu = _.debounce(function (win: Electron.BrowserWindow) {
+    const menuTemplate = menuTemplates[win.id];
+    const menu = menuTemplate ? Menu.buildFromTemplate(_.cloneDeep(menuTemplate)) : null;
+    if (process.platform !== "darwin") {
+        win.setMenu(menu);
+    } else if (menu) {
+        Menu.setApplicationMenu(menu);
+    }
     const mainWindow = shell.getMainWindow();
     if (mainWindow.isFocused()) {
         currentShortcuts = {};
@@ -53,8 +57,8 @@ const __refreshMenu = _.debounce(function (menuTemplate: MenuItemOptions[]) {
     }
 }, 100);
 
-function _refreshMenu(menuTemplate: MenuItemOptions[], callback?: () => void) {
-    __refreshMenu(menuTemplate);
+function _refreshMenu(win: Electron.BrowserWindow, callback?: () => void) {
+    __refreshMenu(win);
     if (callback) {
         process.nextTick(callback);
     }
@@ -162,7 +166,14 @@ function _fixBracketsKeyboardShortcut(shortcut: string): string {
     return shortcut;
 }
 
-export function addMenu(winId: number, title: string, id: string, position: string, relativeId: string, callback: () => void) {
+export function addMenu(
+    winId: number,
+    title: string,
+    id: string,
+    position: string,
+    relativeId: string,
+    callback: () => void
+) {
     assert(typeof winId === "number", "winId must be a number");
     assert(title && typeof title === "string", "title must be a string");
     assert(id && typeof id === "string", "id must be a string");
@@ -173,7 +184,8 @@ export function addMenu(winId: number, title: string, id: string, position: stri
         const newObj = { id, label: title };
         const menuTemplate = _getOrCreateMenuTemplate(winId);
         const err = _addToPosition(newObj, menuTemplate, position || "last", relativeId);
-        _refreshMenu(menuTemplate, callback.bind(null, err));
+        const win = BrowserWindow.fromId(winId);
+        _refreshMenu(win, callback.bind(null, err));
     });
 }
 
@@ -226,8 +238,9 @@ export function addMenuItem(
             parentObj.submenu = [];
         }
 
+        const win = BrowserWindow.fromId(winId);
         const err = _addToPosition(newObj, parentObj.submenu as MenuItemOptions[], position || "last", relativeId);
-        _refreshMenu(menuTemplate, callback.bind(null, err));
+        _refreshMenu(win, callback.bind(null, err));
     });
 }
 
@@ -262,7 +275,11 @@ export function getMenuPosition(
     });
 }
 
-export function getMenuTitle(winId: number, commandId: string, callback: (err?: string | null, title?: string) => void) {
+export function getMenuTitle(
+    winId: number,
+    commandId: string,
+    callback: (err?: string | null, title?: string) => void
+) {
     assert(typeof winId === "number", "winId must be a number");
     assert(commandId && typeof commandId === "string", "commandId must be a string");
     process.nextTick(function () {
@@ -275,23 +292,33 @@ export function getMenuTitle(winId: number, commandId: string, callback: (err?: 
     });
 }
 
-export function removeMenu(winId: number, commandId: string, callback: (err?: string | null, deleted?: boolean) => void) {
+export function removeMenu(
+    winId: number,
+    commandId: string,
+    callback: (err?: string | null, deleted?: boolean) => void
+) {
     assert(typeof winId === "number", "winId must be a number");
     assert(commandId && typeof commandId === "string", "commandId must be a string");
     process.nextTick(function () {
+        const win = BrowserWindow.fromId(winId);
         const menuTemplate = menuTemplates[winId];
         const deleted = _deleteMenuItemById(commandId, menuTemplate);
-        _refreshMenu(menuTemplate, callback.bind(null, deleted ? null : ERR_NOT_FOUND));
+        _refreshMenu(win, callback.bind(null, deleted ? null : ERR_NOT_FOUND));
     });
 }
 
-export function removeMenuItem(winId: number, commandId: string, callback: (err?: string | null, deleted?: boolean) => void) {
+export function removeMenuItem(
+    winId: number,
+    commandId: string,
+    callback: (err?: string | null, deleted?: boolean) => void
+) {
     assert(typeof winId === "number", "winId must be a number");
     assert(commandId && typeof commandId === "string", "commandId must be a string");
     process.nextTick(function () {
+        const win = BrowserWindow.fromId(winId);
         const menuTemplate = menuTemplates[winId];
         const deleted = _deleteMenuItemById(commandId, menuTemplate);
-        _refreshMenu(menuTemplate, callback.bind(null, deleted ? null : ERR_NOT_FOUND));
+        _refreshMenu(win, callback.bind(null, deleted ? null : ERR_NOT_FOUND));
     });
 }
 
@@ -317,7 +344,8 @@ export function setMenuItemShortcut(
         } else {
             delete obj.accelerator;
         }
-        _refreshMenu(menuTemplate, callback.bind(null, null));
+        const win = BrowserWindow.fromId(winId);
+        _refreshMenu(win, callback.bind(null, null));
     });
 }
 
@@ -345,7 +373,8 @@ export function setMenuItemState(
             // TODO: Change addMenuItem to set the type (checkbox, radio, ... submenu)
             obj.type = "checkbox";
         }
-        _refreshMenu(menuTemplate, callback.bind(null, null));
+        const win = BrowserWindow.fromId(winId);
+        _refreshMenu(win, callback.bind(null, null));
     });
 }
 
@@ -365,6 +394,7 @@ export function setMenuTitle(
             return callback(ERR_NOT_FOUND);
         }
         obj.label = title;
-        _refreshMenu(menuTemplate, callback.bind(null, null));
+        const win = BrowserWindow.fromId(winId);
+        _refreshMenu(win, callback.bind(null, null));
     });
 }
