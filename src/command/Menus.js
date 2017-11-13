@@ -471,7 +471,8 @@ define(function (require, exports, module) {
             // Targeting parent to get the menu item <a> and the <li> that contains it
             $(_getHTMLMenuItem(menuItemID)).parent().remove();
         } else {
-            brackets.app.removeMenuItem(commandID, function (err) {
+            const winId = electron.remote.getCurrentWindow().id;
+            brackets.app.removeMenuItem(winId, commandID, function (err) {
                 if (err) {
                     console.error("removeMenuItem() -- command not found: " + commandID + " (error: " + err + ")");
                 }
@@ -517,7 +518,8 @@ define(function (require, exports, module) {
                 return;
             }
         } else {
-            brackets.app.removeMenuItem(menuItem.dividerId, function (err) {
+            const winId = electron.remote.getCurrentWindow().id;
+            brackets.app.removeMenuItem(winId, menuItem.dividerId, function (err) {
                 if (err) {
                     console.error("removeMenuDivider() -- divider not found: %s (error: %s)", menuItemID, err);
                 }
@@ -645,7 +647,8 @@ define(function (require, exports, module) {
                 relativeID = relativeID.sectionMarker;
             }
 
-            brackets.app.addMenuItem(this.id, name, commandID, bindingStr, displayStr, position, relativeID, function (err) {
+            const winId = electron.remote.getCurrentWindow().id;
+            brackets.app.addMenuItem(winId, this.id, name, commandID, bindingStr, displayStr, position, relativeID, function (err) {
                 switch (err) {
                 case NO_ERROR:
                     break;
@@ -778,8 +781,9 @@ define(function (require, exports, module) {
     MenuItem.prototype._checkedChanged = function () {
         var checked = !!this._command.getChecked();
         if (this.isNative) {
+            const winId = electron.remote.getCurrentWindow().id;
             var enabled = !!this._command.getEnabled();
-            brackets.app.setMenuItemState(this._command.getID(), enabled, checked, function (err) {
+            brackets.app.setMenuItemState(winId, this._command.getID(), enabled, checked, function (err) {
                 if (err) {
                     console.log("Error setting menu item state: " + err);
                 }
@@ -794,9 +798,10 @@ define(function (require, exports, module) {
      */
     MenuItem.prototype._enabledChanged = function () {
         if (this.isNative) {
+            const winId = electron.remote.getCurrentWindow().id;
             var enabled = !!this._command.getEnabled();
             var checked = !!this._command.getChecked();
-            brackets.app.setMenuItemState(this._command.getID(), enabled, checked, function (err) {
+            brackets.app.setMenuItemState(winId, this._command.getID(), enabled, checked, function (err) {
                 if (err) {
                     console.log("Error setting menu item state: " + err);
                 }
@@ -811,7 +816,8 @@ define(function (require, exports, module) {
      */
     MenuItem.prototype._nameChanged = function () {
         if (this.isNative) {
-            brackets.app.setMenuTitle(this._command.getID(), this._command.getName(), function (err) {
+            const winId = electron.remote.getCurrentWindow().id;
+            brackets.app.setMenuTitle(winId, this._command.getID(), this._command.getName(), function (err) {
                 if (err) {
                     console.log("Error setting menu title: " + err);
                 }
@@ -827,8 +833,9 @@ define(function (require, exports, module) {
      */
     MenuItem.prototype._keyBindingAdded = function (event, keyBinding) {
         if (this.isNative) {
+            const winId = electron.remote.getCurrentWindow().id;
             var shortcutKey = keyBinding.displayKey || keyBinding.key;
-            brackets.app.setMenuItemShortcut(this._command.getID(), shortcutKey, KeyBindingManager.formatKeyDescriptor(shortcutKey), function (err) {
+            brackets.app.setMenuItemShortcut(winId, this._command.getID(), shortcutKey, KeyBindingManager.formatKeyDescriptor(shortcutKey), function (err) {
                 if (err) {
                     console.error("Error setting menu item shortcut: " + err);
                 }
@@ -844,7 +851,8 @@ define(function (require, exports, module) {
      */
     MenuItem.prototype._keyBindingRemoved = function (event, keyBinding) {
         if (this.isNative) {
-            brackets.app.setMenuItemShortcut(this._command.getID(), "", "", function (err) {
+            const winId = electron.remote.getCurrentWindow().id;
+            brackets.app.setMenuItemShortcut(winId, this._command.getID(), "", "", function (err) {
                 if (err) {
                     console.error("Error setting menu item shortcut: " + err);
                 }
@@ -903,11 +911,12 @@ define(function (require, exports, module) {
         menuMap[id] = menu;
 
         if (!_isHTMLMenu(id)) {
-            brackets.app.addMenu(name, id, position, relativeID, function (err) {
+            const winId = electron.remote.getCurrentWindow().id;
+            brackets.app.addMenu(winId, name, id, position, relativeID, function (err) {
                 switch (err) {
                 case NO_ERROR:
                     // Make sure name is up to date
-                    brackets.app.setMenuTitle(id, name, function (err) {
+                    brackets.app.setMenuTitle(winId, id, name, function (err) {
                         if (err) {
                             console.error("setMenuTitle() -- error: " + err);
                         }
@@ -983,7 +992,8 @@ define(function (require, exports, module) {
         if (_isHTMLMenu(id)) {
             $(_getHTMLMenu(id)).remove();
         } else {
-            brackets.app.removeMenu(id, function (err) {
+            const winId = electron.remote.getCurrentWindow().id;
+            brackets.app.removeMenu(winId, id, function (err) {
                 if (err) {
                     console.error("removeMenu() -- id not found: " + id + " (error: " + err + ")");
                 }

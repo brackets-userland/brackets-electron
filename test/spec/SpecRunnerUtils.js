@@ -333,7 +333,7 @@ define(function (require, exports, module) {
         var path = window.location.pathname;
         path = path.split("/");
         path = path.slice(0, path.length - 2);
-        path.push("src");
+        path.push("www");
         return path.join("/");
     }
 
