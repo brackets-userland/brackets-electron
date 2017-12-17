@@ -13,6 +13,8 @@
     "quotemark": [true, "double"],
     "space-before-function-paren": [true, {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
     "trailing-comma": [true, "never"],
-    "variable-name": false
+    "variable-name": false,
+    "no-implicit-dependencies": [true, "dev"],
+    "no-console": false
   }
 }

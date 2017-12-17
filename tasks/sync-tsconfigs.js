@@ -23,9 +23,16 @@ module.exports = function (grunt) {
 
         common.writeJSON(grunt, "src/tsconfig.json", _.defaultsDeep({
             compilerOptions: {
-                outDir: `../dist/www`
+                outDir: `../dist/www`,
+                module: "amd",
+                moduleResolution: "classic",
+                noImplicitAny: false
             },
-            include: ['./**/*', '../node_modules/@types/**/*']
+            include: [
+                './**/*',
+                '../node_modules/@types/**/*',
+                '../node_modules/electron/electron.d.ts'
+            ]
         }, tsconfigJSON));
 
     });

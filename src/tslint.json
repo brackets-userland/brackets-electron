@@ -1,0 +1,10 @@
+{
+  "extends": "../tslint.json",
+  "rules": {
+    "align": false,
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false,
+    "no-shadowed-variable": false,
+    "no-this-assignment": [true, {"allowed-names": ["^self$"]}]
+  }
+}

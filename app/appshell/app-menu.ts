@@ -2,7 +2,7 @@
 /* tslint:disable:no-empty-interface */
 /* globals Electron, process */
 
-interface MenuItemOptions extends Electron.MenuItemOptions {}
+interface MenuItemOptions extends Electron.MenuItemConstructorOptions {}
 
 import * as _ from "lodash";
 import * as assert from "assert";
@@ -24,7 +24,7 @@ let currentShortcuts: { [accelerator: string]: string } = {};
 
 function registerShortcuts(win: Electron.BrowserWindow, menuItem: MenuItemOptions) {
     if (menuItem.accelerator && menuItem.id) {
-        currentShortcuts[menuItem.accelerator] = menuItem.id;
+        currentShortcuts[menuItem.accelerator as string] = menuItem.id;
     }
     if (Array.isArray(menuItem.submenu)) {
         menuItem.submenu.forEach((i) => registerShortcuts(win, i));

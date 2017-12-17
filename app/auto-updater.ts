@@ -31,7 +31,7 @@ export default class AppUpdater {
         });
         autoUpdater.addListener(
             "update-downloaded",
-            (event: any, releaseNotes: string, releaseName: string, releaseDate: string, updateURL: string) => {
+            (event: Event, releaseNotes: string, releaseName: string, releaseDate: Date, updateURL: string) => {
                 notify(
                     window,
                     "A new update is ready to install",

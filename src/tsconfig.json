@@ -1,16 +1,16 @@
 {
     "compilerOptions": {
         "outDir": "../dist/www",
+        "module": "amd",
+        "moduleResolution": "classic",
+        "noImplicitAny": false,
         "rootDir": ".",
         "sourceMap": true,
         "target": "es6",
-        "module": "commonjs",
-        "moduleResolution": "node",
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "newLine": "lf",
         "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noUnusedLocals": true,
@@ -19,6 +19,7 @@
     },
     "include": [
         "./**/*",
-        "../node_modules/@types/**/*"
+        "../node_modules/@types/**/*",
+        "../node_modules/electron/electron.d.ts"
     ]
 }

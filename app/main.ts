@@ -4,19 +4,19 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import AutoUpdater from "./auto-updater";
 import * as _ from "lodash";
 import { getLogger, setLoggerWindow, unsetLoggerWindow, convertWindowsPathToUnixPath } from "./utils";
-import * as path from "path";
+import * as pathLib from "path";
 import * as shellConfig from "./shell-config";
 import { readBracketsPreferences } from "./brackets-config";
 
 const appInfo = require("./package.json");
 
 const log = getLogger("main");
-process.on("uncaughtException", (err: Error) => {
+(process as NodeJS.EventEmitter).on("uncaughtException", (err: Error) => {
     log.error(`[uncaughtException] ${err.stack}`);
 });
 
 const ipclog = getLogger("ipc-log");
-ipcMain.on("log", function (event, ...args) {
+ipcMain.on("log", function (event: Event, ...args: any[]) {
     ipclog.info(...args);
 });
 
@@ -97,7 +97,7 @@ app.on("gpu-process-crashed", function () {
 
 export function restart(query: {} | string = {}) {
     while (wins.length > 0) {
-        const win = wins.shift();
+        const win = wins.shift(); // tslint:disable-line
         if (win) {
             unsetLoggerWindow(win);
             win.close();
@@ -115,7 +115,7 @@ export function getMainBracketsWindow(): Electron.BrowserWindow {
 export function openMainBracketsWindow(query: {} | string = {}): Electron.BrowserWindow {
 
     // compose path to brackets' index file
-    const indexPath = "file:///" + convertWindowsPathToUnixPath(path.resolve(__dirname, "www", "index.html"));
+    const indexPath = "file:///" + convertWindowsPathToUnixPath(pathLib.resolve(__dirname, "www", "index.html"));
 
     // build a query for brackets' window
     let queryString = "";
@@ -147,7 +147,7 @@ export function openMainBracketsWindow(query: {} | string = {}): Electron.Browse
         height: shellConfig.getNumber("window.height"),
         webPreferences: {
             nodeIntegration: false,
-            preload: path.resolve(__dirname, "preload.js")
+            preload: pathLib.resolve(__dirname, "preload.js")
         }
     };
 

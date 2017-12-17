@@ -1,11 +1,13 @@
+/// <amd-dependency path="module" name="module"/>
+
 import FileSystemStatsType from "../../../types/FileSystemStats";
 
-define(function (require, exports, module) {
+// define(function (require, exports, module) {
 
-    const FileUtils       = require("file/FileUtils");
-    const FileSystemStats = require("filesystem/FileSystemStats");
-    const FileSystemError = require("filesystem/FileSystemError");
-    const NodeDomain      = require("utils/NodeDomain");
+    import FileUtils       = require("file/FileUtils");
+    import FileSystemStats = require("filesystem/FileSystemStats");
+    import FileSystemError = require("filesystem/FileSystemError");
+    import NodeDomain      = require("utils/NodeDomain");
 
     /**
      * @const
@@ -623,4 +625,4 @@ define(function (require, exports, module) {
      * @type {boolean}
      */
     exports.normalizeUNCPaths = appshell.platform === "win";
-});
+// });

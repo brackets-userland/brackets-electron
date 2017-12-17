@@ -1,10 +1,10 @@
-define(function (require, exports, module) {
+// define(function (require, exports, module) {
     "use strict";
 
     // Load dependent modules
-    const AppInit        = require("utils/AppInit");
-    const CommandManager = require("command/CommandManager");
-    const Commands       = require("command/Commands");
+    import AppInit        = require("utils/AppInit");
+    import CommandManager = require("command/CommandManager");
+    import Commands       = require("command/Commands");
 
     let appReady = false; // Set to true after app is fully initialized
     let appShortcuts: { [shortcut: string]: string } = {};
@@ -57,4 +57,4 @@ define(function (require, exports, module) {
         appReady = true;
     });
 
-});
+// });

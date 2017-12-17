@@ -18,7 +18,7 @@ function resolveUrl(url: string | string[]): string {
     return url as string;
 }
 
-export function open(url: string | string[], id: string, options: Electron.BrowserWindowOptions): string {
+export function open(url: string | string[], id: string, options: Electron.BrowserWindowConstructorOptions): string {
     assert(id, "id is required parameter");
     // close if exists, do not call .open for refresh
     if (windows[id]) {

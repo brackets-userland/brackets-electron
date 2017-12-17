@@ -2281,7 +2281,14 @@
     "temp": {
       "version": "0.8.3",
       "from": "temp@0.8.3",
-      "resolved": "https://registry.npmjs.org/temp/-/temp-0.8.3.tgz"
+      "resolved": "https://registry.npmjs.org/temp/-/temp-0.8.3.tgz",
+      "dependencies": {
+        "rimraf": {
+          "version": "2.2.8",
+          "from": "rimraf@>=2.2.6 <2.3.0",
+          "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.2.8.tgz"
+        }
+      }
     },
     "touch": {
       "version": "0.0.3",

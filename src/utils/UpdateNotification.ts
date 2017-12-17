@@ -1,24 +1,24 @@
 import * as lodash from "lodash";
 import UpdateFeedInfo from "../types/UpdateFeedInfo";
 
-define(function (require, exports, module) {
+// define(function (require, exports, module) {
 
     const _: typeof lodash = node.require("lodash");
     const getLogger = node.require("./utils").getLogger;
     const log = getLogger("UpdateNotification");
 
-    const Dialogs              = require("widgets/Dialogs");
-    const DefaultDialogs       = require("widgets/DefaultDialogs");
-    const ExtensionManager     = require("extensibility/ExtensionManager");
-    const PreferencesManager   = require("preferences/PreferencesManager");
-    const NativeApp            = require("utils/NativeApp");
-    const Strings              = require("strings");
-    const UpdateDialogTemplate = require("text!htmlContent/update-dialog.html");
-    const UpdateListTemplate   = require("text!htmlContent/update-list.html");
-    const Mustache             = require("thirdparty/mustache/mustache");
+    import Dialogs              = require("widgets/Dialogs");
+    import DefaultDialogs       = require("widgets/DefaultDialogs");
+    import ExtensionManager     = require("extensibility/ExtensionManager");
+    import PreferencesManager   = require("preferences/PreferencesManager");
+    import NativeApp            = require("utils/NativeApp");
+    import Strings              = require("strings");
+    import UpdateDialogTemplate = require("text!htmlContent/update-dialog.html");
+    import UpdateListTemplate   = require("text!htmlContent/update-list.html");
+    import Mustache             = require("thirdparty/mustache/mustache");
 
     // make sure the global brackets variable is loaded
-    require("utils/Global");
+    import "utils/Global";
 
     // duration of one day in milliseconds
     const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -174,7 +174,7 @@ define(function (require, exports, module) {
             result.resolve(data);
         }
 
-        return result.promise();
+        return result.promise() as JQueryPromise<UpdateFeedInfo>;
     }
 
     /**
@@ -382,4 +382,4 @@ define(function (require, exports, module) {
     // Define public API
     exports.launchAutomaticUpdate = launchAutomaticUpdate;
     exports.checkForUpdate        = checkForUpdate;
-});
+// });

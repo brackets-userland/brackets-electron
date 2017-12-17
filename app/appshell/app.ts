@@ -1,7 +1,7 @@
 /* eslint-env node */
 
 import * as assert from "assert";
-import * as path from "path";
+import * as pathLib from "path";
 import * as utils from "../utils";
 import { remote, shell } from "electron";
 
@@ -41,7 +41,7 @@ export function getApplicationSupportDirectory() {
 
 export function getExtensionsFolder() {
     return utils.convertWindowsPathToUnixPath(
-        path.resolve(getApplicationSupportDirectory(), "extensions")
+        pathLib.resolve(getApplicationSupportDirectory(), "extensions")
     );
 }
 
